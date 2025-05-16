@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Checkbox, IconButton, Stack, Typography } from '@mui/material'
+import { Box, Checkbox, IconButton, Typography, Stack } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import type { SentItem } from '../types'
@@ -17,8 +17,6 @@ const SentItemComponent: React.FC<Props> = ({
 	onDelete,
 	onExport,
 }) => {
-	const timestamp = item.timestamp || new Date().toLocaleString()
-	// TODO: toggleSelect
 	return (
 		<Box
 			sx={{
@@ -30,17 +28,15 @@ const SentItemComponent: React.FC<Props> = ({
 				borderColor: 'divider',
 			}}
 		>
-			{/* Checkbox for selection */}
 			<Checkbox
 				checked={item.selected}
-				onChange={() => onUpdate(item.id, { selected: !item.selected })}
+				onChange={(e) => onUpdate(item.id, { selected: e.target.checked })}
 			/>
 			<Box sx={{ flex: 1 }}>
 				<Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
 					<Typography variant="caption" color="text.secondary">
-						{timestamp.toLocaleString()}
+						{item.timestamp}
 					</Typography>
-					{/* Delete and Export icons */}
 					<Stack direction="row" spacing={1}>
 						<IconButton size="small" onClick={onExport}>
 							<DownloadIcon fontSize="small" />
@@ -50,25 +46,24 @@ const SentItemComponent: React.FC<Props> = ({
 						</IconButton>
 					</Stack>
 				</Box>
-				{/* Sent text */}
 				{item.text && <Typography sx={{ mb: 1 }}>{item.text}</Typography>}
-				{/* Sent attachments if any*/}
-				{item.attachments.map((att, i) => (
-					<Box
-						key={i}
-						component="img"
-						src={att.previewUrl}
-						sx={{
-							width: 100,
-							height: 100,
-							objectFit: 'cover',
-							borderRadius: 1,
-						}}
-					/>
-				))}
+				<Stack direction="row" spacing={1} flexWrap="wrap">
+					{item.attachments.map((att, i) => (
+						<Box
+							key={i}
+							component="img"
+							src={att.previewUrl}
+							sx={{
+								width: 100,
+								height: 100,
+								objectFit: 'cover',
+								borderRadius: 1,
+							}}
+						/>
+					))}
+				</Stack>
 			</Box>
 		</Box>
 	)
 }
-
 export default SentItemComponent
