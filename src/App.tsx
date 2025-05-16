@@ -25,7 +25,7 @@ const App: React.FC = () => {
 		setSentItems((prev) =>
 			prev.map((item) => ({
 				...item,
-				selected: item.id === id ? changes.selected ?? item.selected : false,
+				selected: item.id === id ? (changes.selected ?? item.selected) : false,
 			}))
 		)
 	}
