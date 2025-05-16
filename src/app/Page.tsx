@@ -1,39 +1,69 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Typography } from '@mui/material'
 import UploaderBar from './components/UploaderBar'
 import SentItemComponent from './components/SentItemComponent'
 import type { Attachment, SentItem } from './types'
 
-const App: React.FC = () => {
-	const [items, setItems] = useState<ItemType[]>([]) // store the sent items
+interface PageProps {
+	items: SentItem[]
+	onSend: (text: string, attachments: Attachment[]) => void
+	onDelete: (ids: number[]) => void
+	onExport: (ids: number[]) => void
+	onUpdate: (id: number, changes: Partial<SentItem>) => void
+}
+const Page: React.FC<PageProps> = ({
+	items,
+	onSend,
+	onDelete,
+	onExport,
+	onUpdate,
+}) => {
+	const selectedItem = items.find((item) => item.selected)
 
-	// TODO: handleSend(text, attachments)
-	const handleSend = (text: string, attachments: Attachment[]) => {
-		console.log('Sending:', text, attachments)
+	const handleExport = () => {
+		if (selectedItem) {
+			onExport([selectedItem.id])
+		}
 	}
 
-	// TODO: handleDelete(ids: number[])
-
-	// TODO: handleExport(ids: number[])
-	// - collect payload [{text, attachments: [{name, previewUrl}]}]
-	// - create JSON blob and trigger download
+	const handleDelete = () => {
+		if (selectedItem) {
+			onDelete([selectedItem.id])
+		}
+	}
 
 	return (
-		<Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+		<Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
 			<Box sx={{ bgcolor: 'primary.main', p: 2 }}>
-				<Typography variant="h3" color="white">
+				<Typography variant="h6" color="white">
 					Content Uploader
 				</Typography>
 			</Box>
-			Render the page here
-			{/* TODO: render UploaderBar */}
-			<Box sx={{ borderTop: 1, borderColor: 'divider' }}>
-				<UploaderBar onSend={handleSend} />
+
+			<Box sx={{ flex: 1, overflow: 'auto' }}>
+				{items.map((item) => (
+					<SentItemComponent
+						key={item.id}
+						item={item}
+						onUpdate={onUpdate}
+						onDelete={handleDelete}
+						onExport={handleExport}
+					/>
+				))}
+				{items.length === 0 && (
+					<Typography
+						variant="body1"
+						color="text.secondary"
+						align="center"
+						sx={{ mt: 4 }}
+					>
+						No items yet. Start by sending a message or dropping images!
+					</Typography>
+				)}
 			</Box>
-			{/* TODO: Bulk actions */}
-			{/* TODO: map items to their respective components */}
+			<UploaderBar onSend={onSend} />
 		</Box>
 	)
 }
 
-export default App
+export default Page
