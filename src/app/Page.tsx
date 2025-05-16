@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import UploaderBar from './components/UploaderBar'
-import SentItemComponent from './components/SentItem'
+import SentItemComponent from './components/SentItemComponent'
 import type { Attachment, SentItem } from './types'
 
 const App: React.FC = () => {

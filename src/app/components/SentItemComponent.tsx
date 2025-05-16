@@ -12,7 +12,12 @@ interface Props {
 	onExport: () => void
 }
 
-const SentItem: React.FC<Props> = ({ item, onUpdate, onDelete, onExport }) => {
+const SentItemComponent: React.FC<Props> = ({
+	item,
+	onUpdate,
+	onDelete,
+	onExport,
+}) => {
 	// TODO: toggleSelect
 
 	return (
@@ -25,4 +30,4 @@ const SentItem: React.FC<Props> = ({ item, onUpdate, onDelete, onExport }) => {
 	)
 }
 
-export default SentItem
+export default SentItemComponent

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ThemeProvider, CssBaseline, Box } from '@mui/material'
 import theme from './app/theme'
 import UploaderBar from './app/components/UploaderBar'
-import SentItemComponent from './app/components/SentItem'
+import SentItemComponent from './app/components/SentItemComponent'
 import type { Attachment, SentItem } from './app/types'
 import Page from './app/Page'
 
