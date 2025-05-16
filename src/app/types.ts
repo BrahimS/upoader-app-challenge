@@ -4,8 +4,9 @@ export interface Attachment {
 }
 
 export interface SentItem {
-	id: any
+	id: number
 	text: string | null
 	attachments: Attachment[]
 	selected: boolean
+	timestamp?: string
 }
