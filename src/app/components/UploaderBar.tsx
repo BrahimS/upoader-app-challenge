@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Box, IconButton, TextField } from '@mui/material'
+import React, { useState, useRef } from 'react'
+import { Box, TextField, IconButton } from '@mui/material'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import SendIcon from '@mui/icons-material/Send'
 import type { Attachment } from '../types'
@@ -12,17 +12,43 @@ const UploaderBar: React.FC<Props> = ({ onSend }) => {
 	const [text, setText] = useState('')
 	const [attachments, setAttachments] = useState<Attachment[]>([])
 	const [dragOver, setDragOver] = useState(false)
+	const fileInputRef = useRef<HTMLInputElement>(null)
 
-	// TODO: handleFiles(files: File[])
-	// - create previewUrl for images
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault()
+		setDragOver(true)
+	}
 
-	// TODO: [optional] drag & drop handlers on TextField area
+	const handleDragLeave = (e: React.DragEvent) => {
+		e.preventDefault()
+		setDragOver(false)
+	}
 
-	// TODO: onFileChange -> handleFiles + reset input
+	const handleDrop = (e: React.DragEvent) => {
+		e.preventDefault()
+		setDragOver(false)
 
-	// TODO: removeAttachment(index)
+		const files = Array.from(e.dataTransfer.files)
+		const newAttachments: Attachment[] = files.map((file) => ({
+			file,
+			previewUrl: URL.createObjectURL(file),
+		}))
+		setAttachments((prev) => [...prev, ...newAttachments])
+	}
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = Array.from(e.target.files || [])
+		const newAttachments: Attachment[] = files.map((file) => ({
+			file,
+			previewUrl: URL.createObjectURL(file),
+		}))
+		setAttachments((prev) => [...prev, ...newAttachments])
+	}
 
-	// TODO: onSend -> invoke onSend(text, attachments), reset text & attachments
+	const handleSend = () => {
+		onSend(text, attachments)
+		setText('')
+		setAttachments([])
+	}
 
 	return (
 		<Box
@@ -34,32 +60,37 @@ const UploaderBar: React.FC<Props> = ({ onSend }) => {
 				bgcolor: 'background.paper',
 			}}
 		>
-			{/* Bar with TextField, button to trigger file selection, Send button */}
 			<TextField
-				variant="outlined"
-				placeholder="Type your message here..."
+				fullWidth
+				size="small"
 				value={text}
-				onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-					setText(e.target.value)
-				}
-				sx={{ flexGrow: 1 }}
+				onChange={(e) => setText(e.target.value)}
+				placeholder="Type your message..."
+				onDragOver={handleDragOver}
+				onDragLeave={handleDragLeave}
+				onDrop={handleDrop}
+				sx={{
+					'& .MuiOutlinedInput-root': {
+						bgcolor: dragOver ? 'action.hover' : 'background.paper',
+					},
+				}}
 			/>
-			{/* Optional: Render drag-overlay when dragOver is true */}
-			{/* Below: render thumbnails with delete icons */}
 			<input
 				type="file"
+				ref={fileInputRef}
+				onChange={handleFileChange}
 				accept="image/*"
 				multiple
 				style={{ display: 'none' }}
 			/>
-			<IconButton size="small" onClick={() => {}}>
+			<IconButton onClick={() => fileInputRef.current?.click()} size="small">
 				<AttachFileIcon />
 			</IconButton>
 			<IconButton
-				size="small"
 				color="primary"
+				onClick={handleSend}
 				disabled={!text.trim() && attachments.length === 0}
-				onClick={() => onSend(text, attachments)}
+				size="small"
 			>
 				<SendIcon />
 			</IconButton>
