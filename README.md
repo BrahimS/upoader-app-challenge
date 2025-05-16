@@ -1,54 +1,70 @@
-# React + TypeScript: Text + Image Uploader
+# Content Uploader App
 
-## Overview
+## Features
 
-Build an interface where users can:
+- Send text messages
+- Upload and attach multiple images
+- Drag and drop image upload support
+- Select and manage multiple items
+- Export functionality for sent items
+- Real-time timestamp for messages
+- Responsive design
 
-- Type a text.
-- Attach one or more images via drag-drop **or** by clicking the paperclip icon (images only).
-- Preview and remove attachments before sending.
-- Send the message to a scrollable “Sent Items” list.
-- Select sent items (via checkboxes) for bulk deletion or export.
+## Tech Stack
 
-The top bar (text input + image input + Send button) must always be visible to the user.
+- **Frontend Framework**: React with TypeScript
+- **UI Library**: Material-UI (MUI)
+- **Build Tool**: Vite
+- **State Management**: React useState hooks
+- **Styling**: MUI's styled components and sx props
 
-Use Material-UI, React, and TypeScript.
-You can add any validation, improvement, error handling, UI change, etc that improves the final product.
+## Project Structure
 
-## Functional Requirements
+src/
+├── app/
+│ ├── components/
+│ │ ├── UploaderBar.tsx # Input bar with text and file upload
+│ │ └── SentItemComponent.tsx # Individual message display
+│ ├── types.ts # TypeScript interfaces
+│ ├── theme.ts # MUI theme configuration
+│ └── Page.tsx # Main page layout
+├── App.tsx # Root component
+└── main.tsx # Entry point
 
-1. **Text + Drag-Drop**
+## Key Components
 
-   - TextField accepts text.
-   - Dragging images over the text area shows a warning to the user somehow: "Drop to upload the image"
-   - Files dropped elsewhere in the app do nothing.
+### UploaderBar
 
-2. **Attachment Button**
+- Handles text input and file uploads
+- Supports drag and drop
+- Manages file preview
+- Input validation
 
-   - A button opens the file picker (accepts only images).
-   - Selected images appear as thumbnails somewhere in the bar.
-   - Each thumbnail has a small “remove” icon before sending it.
+### SentItemComponent
 
-3. **Send**
+- Displays sent messages and attachments
+- Handles item selection
+- Shows timestamp
+- Provides export and delete actions
 
-   - Clicking Send (disabled if no text & no attachments) adds a new message to the list.
-   - After send, text and attachments clear.
+### Page
 
-4. **Sent Items**
+- Manages layout and component composition
+- Handles item updates and selections
+- Renders empty state message
 
-   - Each item shows text and image thumbnails. This thumbnails are not deletable.
-   - Items are selectable.
-   - Per-item actions: Delete (removes item), Export (downloads a JSON blob with `{ text: string|null, files: string[] }`).
-   - Bulk actions appear above list when ≥1 item selected: Delete Selected, Export Selected.
+## State Management
 
-5. **Layout & Styling**
-   - Use MUI components.
-   - There's a theme implemented. Try to maximize the use of it.
-   - Choose responsive behavior when possible to do.
+The app uses React's useState hook to manage:
 
-## Technical Specs
+- Sent items array
+- File attachments
+- Selection state
+- Text input
 
-- **Framework:** React 18+, TypeScript
-- **Styling & UI:** @mui/material, @mui/icons-material
-- **State Management:** React hooks only
-- **File Handling:** `URL.createObjectURL` / `.revokeObjectURL`
+## Data Flow
+
+1. User inputs text/uploads images via UploaderBar
+2. App component maintains the main state
+3. Items are displayed through SentItemComponent
+4. Actions (delete/export) are handled at the App level
